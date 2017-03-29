@@ -1,6 +1,13 @@
 package csc202banksim;
 
-
 public class Teller {
-	// just a test
+
+	LinkedQueue tQueue;
+
+
+
+	public Teller() {
+		tQueue = new LinkedQueue();
+	}
+
 }
