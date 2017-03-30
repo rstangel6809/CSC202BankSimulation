@@ -3,12 +3,17 @@ package csc202banksim;
 	
 public class Customer{
 
-	private int custNum;
+	private static int custNum;
 	private DepartureEvent departureEvent;
 	private ArrivalEvent arrivalEvent;
 	private ServiceEvent serviceEvent;
 	
-	public Customer (int c, DepartureEvent d, ArrivalEvent a, ServiceEvent s){
+	public Customer(){
+		
+	}
+	
+	public Customer (DepartureEvent d, ArrivalEvent a, ServiceEvent s){
+		custNum++;
 		departureEvent = d;
 		arrivalEvent = a;
 		serviceEvent = s;

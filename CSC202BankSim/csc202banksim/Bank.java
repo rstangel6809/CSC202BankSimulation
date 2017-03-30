@@ -2,5 +2,10 @@ package csc202banksim;
 
 
 public class Bank {
-	 // testing 
+	 Teller[] tellers;
+	 
+	 public Bank(int numTels){
+		 tellers = new Teller[numTels];
+	 }
+	 
 }
