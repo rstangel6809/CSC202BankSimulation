@@ -10,7 +10,7 @@ public class ArrivalEvent {
 	}
 	
 	public String toString(){
-		return "";
+		return "Arrives at " + time + " and waits for " + waitTime;
 	}
 
 	public int getWaitTime() {

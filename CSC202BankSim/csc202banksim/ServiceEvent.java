@@ -13,7 +13,8 @@ public class ServiceEvent {
 	}
 	
 	public String toString(){
-		return "";
+		return "Begins service at " + serviceTime + " by teller #" + tellerNum + 
+				" and is served in " + time;
 	}
 
 	public int getTellerNum() {

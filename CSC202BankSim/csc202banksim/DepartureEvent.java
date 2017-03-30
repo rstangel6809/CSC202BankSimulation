@@ -18,7 +18,7 @@ public class DepartureEvent {
 	}
 
 	public String toString(){
-		return "The teller number is " + tellerNum;
+		return "Departs at " + time + " after being served by teller #" + tellerNum;
 	}
 
 	public int getTellerNum() {

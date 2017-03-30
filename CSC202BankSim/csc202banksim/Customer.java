@@ -19,7 +19,16 @@ public class Customer{
 		serviceEvent = s;
 	}
 	public String toString(){
-		return "";
+		return "Customer  #" + custNum;
+	}
+	public String toStringArrival(){
+		return "Customer # " + arrivalEvent.toString();
+	}
+	public String toStringDeparture(){
+		return "Customer # " + departureEvent.toString();
+	}
+	public String toStringService(){
+		return "Customer #" + serviceEvent.toString();
 	}
 	public int getCustNum() {
 		return custNum;
