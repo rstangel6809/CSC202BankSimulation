@@ -35,11 +35,15 @@ public class LinkedQueue {
 
 	public void queueCust(Customer c) {
 		Node newNode = new Node(c);
+		if(last!=null){
+			last.nextInLine= newNode;
+			last = newNode;
+		}
 		
 		if(last==null)
 			last = newNode;
 		if(first == null)
-			last = newNode;
+			first = newNode;
 	}
 	
 	public String peekFirst(){
