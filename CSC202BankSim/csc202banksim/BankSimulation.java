@@ -36,6 +36,17 @@ public class BankSimulation {
 		
 		this.b = new Bank(numTellers);
 		
+		for(int time = 0;time<simulationLength;time++){
+			
+			int remainder = (time%arrivalHigh)+1;
+			
+			if(Chance.getChance(100 / remainder)){
+				b.tellers[0].tQueue.queueCust(new Customer());
+				System.out.println("Added Customer at time : " + time);
+			}
+		}
+		
+		
 		
 		
 		

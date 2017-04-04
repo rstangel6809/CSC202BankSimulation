@@ -46,6 +46,10 @@ public class LinkedQueue {
 			first = newNode;
 	}
 	
+	public void dequeueCust(){
+		first = first.nextInLine;
+	}
+	
 	public String peekFirst(){
 		return first.customer.toString();
 	}
