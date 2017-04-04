@@ -35,22 +35,30 @@ public class LinkedQueue {
 
 	public void queueCust(Customer c) {
 		Node newNode = new Node(c);
-		if(last!=null){
-			last.nextInLine= newNode;
+		
+		if(first == null && last == null){
+			first = newNode;
 			last = newNode;
 		}
 		
-		if(last==null)
+		else {
+			last.nextInLine = newNode;
 			last = newNode;
-		if(first == null)
-			first = newNode;
+		}
+		
+		
 	}
 	
 	public void dequeueCust(){
+		System.out.print("Customer "+first.customer.getCustNum()+" left at : ");
 		first = first.nextInLine;
 	}
 	
-	public String peekFirst(){
-		return first.customer.toString();
+	public boolean hasCustomer(){
+		return first!=null;
+	}
+	
+	public Customer peekFirst(){
+		return first.customer;
 	}
 }

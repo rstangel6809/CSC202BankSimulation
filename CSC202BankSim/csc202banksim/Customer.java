@@ -9,7 +9,7 @@ public class Customer{
 	private ServiceEvent serviceEvent;
 	
 	public Customer(){
-		
+		custNum++;
 	}
 	
 	public Customer (DepartureEvent d, ArrivalEvent a, ServiceEvent s){
