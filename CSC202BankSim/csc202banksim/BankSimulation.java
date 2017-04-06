@@ -44,26 +44,23 @@ public class BankSimulation {
 		this.b = new Bank(numTellers);
 		boolean custAdded = false;
 		int time = 1;
+		int arrivalTime = randomTime(arrivalLow,arrivalHigh)+time;
 
 		while (time <= simulationLength) {
+			
 
-			int remainder = (time % arrivalHigh) + 1;
 
-			int perChance = 100 / (arrivalHigh / remainder);
-
-			if (remainder < 2 && custAdded) {
-				custAdded = false;
-			}
-
-			if (!custAdded && Chance.getChance(perChance)) {
+			if (arrivalTime <= time) {
 				custAdded = true;
-				Customer newCust = new Customer();
+				Customer newCust = new Customer(randomTime(serviceLow,serviceHigh));
 
 				b.tellers[0].getQueue().queueCust(newCust);
 
 				System.out.println("Added Customer " + newCust.getCustNum() + " at time : " + time);
 
 				numCustomers++;
+				
+				arrivalTime = randomTime(arrivalLow,arrivalHigh) + time;
 			}
 
 			b.serveCusts(time, serviceLow, serviceHigh);

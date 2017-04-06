@@ -5,12 +5,14 @@ public class Teller {
 	private LinkedQueue tQueue;
 	private static int countNum = 1;
 	public int tellerNum;
+	public int lineWait;
 
 
 
 	public Teller() {
 		tQueue = new LinkedQueue();
 		setTellerNum();
+		lineWait = 0;
 	}
 
 
@@ -78,5 +80,12 @@ public class Teller {
 
 		this.tQueue = newQueue;
 	}
+	
+	public void setLineWait(int wait){
+		this.lineWait = wait;
+	}
 
+	public int getLineWait(){
+		return this.lineWait;
+	}
 }

@@ -11,6 +11,12 @@ public class Customer {
 
 
 	public Customer() {
+		arrivalEvent = new ArrivalEvent();
+		setCustNum();
+	}
+	
+	public Customer(int serviceTime) {
+		arrivalEvent = new ArrivalEvent(serviceTime);
 		setCustNum();
 	}
 

@@ -40,6 +40,12 @@ public class Bank {
 
 		tellers[0].getQueue().queueCust(c);
 	}
+	
+	public void calcLineWaits(){
+		for(Teller t : tellers){
+			
+		}
+	}
 
 
 
