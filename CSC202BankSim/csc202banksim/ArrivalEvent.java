@@ -26,7 +26,7 @@ public class ArrivalEvent extends Event{
 		return super.getTime();
 	}
 
-	public void setTime(Event time) {
+	public void setTime(int time) {
 		this.setTime(time);
 	}
 	
