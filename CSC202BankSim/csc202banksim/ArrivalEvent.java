@@ -1,16 +1,17 @@
 package csc202banksim;
 
-public class ArrivalEvent {
+public class ArrivalEvent extends Event{
 	private int waitTime;
-	private Event time;
 	
-	public ArrivalEvent(int w, Event t){
+	
+	public ArrivalEvent(int w, int t){
+		super(t);
 		waitTime = w;
-		time = t;
+		
 	}
 	
 	public String toString(){
-		return "Arrives at " + time + " and waits for " + waitTime;
+		return "Arrives at " + super.getTime() + " and waits for " + waitTime;
 	}
 
 	public int getWaitTime() {
@@ -21,12 +22,12 @@ public class ArrivalEvent {
 		this.waitTime = waitTime;
 	}
 
-	public Event getTime() {
-		return time;
+	public int getTime() {
+		return super.getTime();
 	}
 
 	public void setTime(Event time) {
-		this.time = time;
+		this.setTime(time);
 	}
 	
 	

@@ -1,24 +1,15 @@
 package csc202banksim;
 
-public class DepartureEvent {
+public class DepartureEvent extends Event {
 	private int tellerNum;
-	private Event time;
 	
-	public DepartureEvent(int teller, Event t){
+	public DepartureEvent(int teller, int t){
+		super(t);
 		tellerNum = teller;
-		time = t;
+		
 	}
-	
-	public Event getTime() {
-		return time;
-	}
-
-	public void setTime(Event time) {
-		this.time = time;
-	}
-
 	public String toString(){
-		return "Departs at " + time + " after being served by teller #" + tellerNum;
+		return "Departs at " + super.getTime() + " after being served by teller #" + tellerNum;
 	}
 
 	public int getTellerNum() {
@@ -27,6 +18,12 @@ public class DepartureEvent {
 
 	public void setTellerNum(int tellerNum) {
 		this.tellerNum = tellerNum;
+	}
+	public int getTimr(){
+		return super.getTime();
+	}
+	public void setTime(int time){
+		super.setTime(time);
 	}
 	
 	
