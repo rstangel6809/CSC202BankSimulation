@@ -55,15 +55,6 @@ public class Bank {
 
 			if (t.hasCust()) {
 
-				if (t.getFirstCust().getServiceEvent() == null) {
-
-					int tellNum = t.tellerNum;
-					int randomTime = randomTime(low, high);
-
-					ServiceEvent serveEvent = new ServiceEvent(tellNum, randomTime, time);
-
-					t.getFirstCust().setServiceEvent(serveEvent);
-				}
 
 				t.serveCustomer(time);
 			}

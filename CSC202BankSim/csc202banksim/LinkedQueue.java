@@ -53,7 +53,6 @@ public class LinkedQueue {
 
 	public void dequeueCust() {
 
-		System.out.print("Customer " + first.customer.getCustNum() + " left at : ");
 		first = first.nextInLine;
 	}
 
@@ -69,5 +68,10 @@ public class LinkedQueue {
 	public Customer getFirstCust() {
 
 		return first.customer;
+	}
+	
+	public Customer getLastCust() {
+
+		return last.customer;
 	}
 }

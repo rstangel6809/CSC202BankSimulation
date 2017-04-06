@@ -42,21 +42,40 @@ public class BankSimulation {
 	public void startSimulation() {
 
 		this.b = new Bank(numTellers);
-		boolean custAdded = false;
 		int time = 1;
 		int arrivalTime = randomTime(arrivalLow,arrivalHigh)+time;
+		int lowestWait;
+		Teller lowestWaitTeller = b.tellers[0];
 
 		while (time <= simulationLength) {
 			
+			lowestWait = b.tellers[0].getLineWait();
+			
+			for(Teller t : b.tellers){
+				
+				int currentWait = t.getLineWait();
+				
+				if(currentWait<lowestWait){
+					lowestWait = currentWait;
+					lowestWaitTeller = t;
+				}
+				
+				if(currentWait>0){
+					t.setLineWait(currentWait-1);
+				}
+			}
 
 
 			if (arrivalTime <= time) {
-				custAdded = true;
-				Customer newCust = new Customer(randomTime(serviceLow,serviceHigh));
+				ArrivalEvent arrive = new ArrivalEvent(lowestWait,time);
+				ServiceEvent serve = new ServiceEvent(lowestWaitTeller.getTellerNum(),randomTime(serviceLow,serviceHigh),time);
+				
+				Customer newCust = new Customer(arrive,serve);
 
-				b.tellers[0].getQueue().queueCust(newCust);
+				lowestWaitTeller.getQueue().queueCust(newCust);
+				lowestWaitTeller.setLineWait(lowestWait+serve.getServiceTime());
 
-				System.out.println("Added Customer " + newCust.getCustNum() + " at time : " + time);
+				System.out.println(newCust.toStringArrival());
 
 				numCustomers++;
 				

@@ -4,8 +4,8 @@ public class Teller {
 
 	private LinkedQueue tQueue;
 	private static int countNum = 1;
-	public int tellerNum;
-	public int lineWait;
+	private int tellerNum;
+	private int lineWait;
 
 
 
@@ -20,20 +20,19 @@ public class Teller {
 	public void serveCustomer(int currentTime) {
 
 		if (tQueue.getFirstCust() != null) {
+			
+			Customer firstCust = tQueue.getFirstCust();
 
-			int eventTime = tQueue.getFirstCust().getServiceEvent().getTime();
-			int serveTime = tQueue.getFirstCust().getServiceEvent().getServiceTime();
+			int eventTime = firstCust.getServiceEvent().getTime();
+			int serveTime = firstCust.getServiceEvent().getServiceTime();
 
 			if (currentTime - eventTime >= serveTime) {
-
+				DepartureEvent depart = new DepartureEvent(tellerNum,currentTime);
+				firstCust.setDepartureEvent(depart);
+				
+				System.out.println(firstCust.toStringDeparture());
+				
 				tQueue.dequeueCust();
-
-				System.out.println(currentTime);
-
-				if (tQueue.hasCust()) {
-
-					System.out.println("Customer " + tQueue.getFirstCust().getCustNum() + " now in front ");
-				}
 			}
 		}
 	}
@@ -65,6 +64,10 @@ public class Teller {
 	public Customer getFirstCust() {
 
 		return tQueue.getFirstCust();
+	}
+	
+	public Customer getLastCust(){
+		return tQueue.getLastCust();
 	}
 
 

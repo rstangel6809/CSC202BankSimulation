@@ -11,12 +11,12 @@ public class Customer {
 
 
 	public Customer() {
-		arrivalEvent = new ArrivalEvent();
 		setCustNum();
 	}
 	
-	public Customer(int serviceTime) {
-		arrivalEvent = new ArrivalEvent(serviceTime);
+	public Customer(ArrivalEvent a, ServiceEvent s) {
+		arrivalEvent = a;
+		serviceEvent = s;
 		setCustNum();
 	}
 
@@ -41,28 +41,28 @@ public class Customer {
 
 	public String toString() {
 
-		return "Customer  #" + custNum;
+		return "Customer # " + custNum + " ";
 	}
 
 
 
 	public String toStringArrival() {
 
-		return "Customer # " + arrivalEvent.toString();
+		return toString() + arrivalEvent.toString();
 	}
 
 
 
 	public String toStringDeparture() {
 
-		return "Customer # " + departureEvent.toString();
+		return toString() + departureEvent.toString();
 	}
 
 
 
 	public String toStringService() {
 
-		return "Customer #" + serviceEvent.toString();
+		return toString() + serviceEvent.toString();
 	}
 
 
