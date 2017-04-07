@@ -20,7 +20,6 @@ public class Teller {
 	public void serveCustomer(int currentTime) {
 
 		if (tQueue.getFirstCust() != null) {
-			
 			Customer firstCust = tQueue.getFirstCust();
 
 			int eventTime = firstCust.getServiceEvent().getTime();

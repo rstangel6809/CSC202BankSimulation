@@ -11,6 +11,8 @@ public class ServiceEvent extends Event {
 		super(t);
 		tellerNum = teller;
 		serviceTime = s;
+	
+		
 	}
 
 

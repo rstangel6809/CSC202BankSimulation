@@ -45,12 +45,12 @@ public class BankSimulation {
 		int time = 1;
 		int arrivalTime = randomTime(arrivalLow,arrivalHigh)+time;
 		int lowestWait;
-		Teller lowestWaitTeller = b.tellers[0];
+		
 
 		while (time <= simulationLength) {
 			
 			lowestWait = b.tellers[0].getLineWait();
-			
+			Teller lowestWaitTeller = b.tellers[0];
 			for(Teller t : b.tellers){
 				
 				int currentWait = t.getLineWait();
@@ -68,7 +68,7 @@ public class BankSimulation {
 
 			if (arrivalTime <= time) {
 				ArrivalEvent arrive = new ArrivalEvent(lowestWait,time);
-				ServiceEvent serve = new ServiceEvent(lowestWaitTeller.getTellerNum(),randomTime(serviceLow,serviceHigh),time);
+				ServiceEvent serve = new ServiceEvent(lowestWaitTeller.getTellerNum(),randomTime(serviceLow,serviceHigh),lowestWait + time);
 				
 				Customer newCust = new Customer(arrive,serve);
 
