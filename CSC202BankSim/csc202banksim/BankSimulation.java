@@ -43,52 +43,60 @@ public class BankSimulation {
 
 		this.b = new Bank(numTellers);
 		int time = 1;
-		int arrivalTime = randomTime(arrivalLow,arrivalHigh)+time;
+		int arrivalTime = randomTime(arrivalLow, arrivalHigh) + time;
 		int lowestWait;
-		
 
 		while (time <= simulationLength) {
-			
+
 			lowestWait = b.tellers[0].getLineWait();
 			Teller lowestWaitTeller = b.tellers[0];
-			for(Teller t : b.tellers){
-				
+			for (Teller t : b.tellers) {
+
 				int currentWait = t.getLineWait();
-				
-				if(currentWait<lowestWait){
+
+				if (currentWait < lowestWait) {
 					lowestWait = currentWait;
 					lowestWaitTeller = t;
 				}
-				
-				if(currentWait>0){
-					t.setLineWait(currentWait-1);
+
+				if (currentWait > 0) {
+					t.setLineWait(currentWait - 1);
 				}
 			}
 
-
 			if (arrivalTime <= time) {
-				ArrivalEvent arrive = new ArrivalEvent(lowestWait,time);
-				ServiceEvent serve = new ServiceEvent(lowestWaitTeller.getTellerNum(),randomTime(serviceLow,serviceHigh),lowestWait + time);
-				
-				Customer newCust = new Customer(arrive,serve);
+				ArrivalEvent arrive = new ArrivalEvent(lowestWait, time);
+				ServiceEvent serve = new ServiceEvent(lowestWaitTeller.getTellerNum(),
+						randomTime(serviceLow, serviceHigh), lowestWait + time);
+
+				Customer newCust = new Customer(arrive, serve);
 
 				lowestWaitTeller.getQueue().queueCust(newCust);
-				lowestWaitTeller.setLineWait(lowestWait+serve.getServiceTime());
+				lowestWaitTeller.setLineWait(lowestWait + serve.getServiceTime());
 
 				System.out.println(newCust.toStringArrival());
 
+				lowestWaitTeller.setNumCusts(lowestWaitTeller.getNumCusts() + 1);
 				numCustomers++;
-				
-				arrivalTime = randomTime(arrivalLow,arrivalHigh) + time;
+
+				arrivalTime = randomTime(arrivalLow, arrivalHigh) + time;
+
+				drawBank();
 			}
 
-			b.serveCusts(time, serviceLow, serviceHigh);
+			if (b.serveCusts(time, serviceLow, serviceHigh)) {
+				drawBank();
+			}
+
 			time++;
 		}
 
 		while (b.hasCusts()) {
-			b.serveCusts(time, serviceLow, serviceHigh);
+			if (b.serveCusts(time, serviceLow, serviceHigh)) {
+				drawBank();
+			}
 			time++;
+
 		}
 
 	}
@@ -131,5 +139,18 @@ public class BankSimulation {
 		int diff = high - low + 1;
 		int num = ((int) (Math.random() * diff)) + low;
 		return num;
+	}
+
+
+
+	public void drawBank() {
+
+		for (Teller t : b.tellers) {
+			System.out.printf("%d   %3d | ", t.getTellerNum(),t.getLineWait());
+			for (int i = 0; i < t.getNumCusts(); i++) {
+				System.out.print("X ");
+			}
+			System.out.println();
+		}
 	}
 }

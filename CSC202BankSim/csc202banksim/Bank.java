@@ -49,16 +49,18 @@ public class Bank {
 
 
 
-	public void serveCusts(int time, int low, int high) {
-
+	public boolean serveCusts(int time, int low, int high) {
+		boolean numCustChanged = false;
 		for (Teller t : tellers) {
 
 			if (t.hasCust()) {
 
-
-				t.serveCustomer(time);
+				if(t.serveCustomer(time)){
+					numCustChanged = true;
+				}
 			}
 		}
+		return numCustChanged;
 	}
 
 

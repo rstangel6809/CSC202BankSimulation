@@ -6,6 +6,7 @@ public class Teller {
 	private static int countNum = 1;
 	private int tellerNum;
 	private int lineWait;
+	private int numCusts;
 
 
 
@@ -13,11 +14,14 @@ public class Teller {
 		tQueue = new LinkedQueue();
 		setTellerNum();
 		lineWait = 0;
+		numCusts = 0;
 	}
 
 
 
-	public void serveCustomer(int currentTime) {
+	public boolean serveCustomer(int currentTime) {
+
+		boolean numCustChanged = false;
 
 		if (tQueue.getFirstCust() != null) {
 			Customer firstCust = tQueue.getFirstCust();
@@ -26,14 +30,31 @@ public class Teller {
 			int serveTime = firstCust.getServiceEvent().getServiceTime();
 
 			if (currentTime - eventTime >= serveTime) {
-				DepartureEvent depart = new DepartureEvent(tellerNum,currentTime);
+				DepartureEvent depart = new DepartureEvent(tellerNum, currentTime);
 				firstCust.setDepartureEvent(depart);
-				
+
 				System.out.println(firstCust.toStringDeparture());
-				
+
 				tQueue.dequeueCust();
+				numCustChanged = true;
+				numCusts--;
 			}
 		}
+		return numCustChanged;
+	}
+
+
+
+	public void setNumCusts(int num) {
+
+		numCusts = num;
+	}
+
+
+
+	public int getNumCusts() {
+
+		return numCusts;
 	}
 
 
@@ -64,8 +85,11 @@ public class Teller {
 
 		return tQueue.getFirstCust();
 	}
-	
-	public Customer getLastCust(){
+
+
+
+	public Customer getLastCust() {
+
 		return tQueue.getLastCust();
 	}
 
@@ -82,12 +106,18 @@ public class Teller {
 
 		this.tQueue = newQueue;
 	}
-	
-	public void setLineWait(int wait){
+
+
+
+	public void setLineWait(int wait) {
+
 		this.lineWait = wait;
 	}
 
-	public int getLineWait(){
+
+
+	public int getLineWait() {
+
 		return this.lineWait;
 	}
 }
