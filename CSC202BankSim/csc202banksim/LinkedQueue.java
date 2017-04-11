@@ -52,8 +52,13 @@ public class LinkedQueue {
 
 
 	public void dequeueCust() {
-
-		first = first.nextInLine;
+		if(first.nextInLine != null){
+			first = first.nextInLine;
+		}else{
+			first = null;
+			last = null;
+					
+		}
 	}
 
 
