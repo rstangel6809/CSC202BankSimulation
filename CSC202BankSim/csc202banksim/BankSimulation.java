@@ -50,6 +50,7 @@ public class BankSimulation {
 
 			lowestWait = b.tellers[0].getLineWait();
 			Teller lowestWaitTeller = b.tellers[0];
+
 			for (Teller t : b.tellers) {
 
 				int currentWait = t.getLineWait();
@@ -62,6 +63,11 @@ public class BankSimulation {
 				if (currentWait > 0) {
 					t.setLineWait(currentWait - 1);
 				}
+			}
+			
+
+			if (b.serveCusts(time, serviceLow, serviceHigh)) {
+				// drawBank();
 			}
 
 			if (arrivalTime <= time) {
@@ -81,17 +87,23 @@ public class BankSimulation {
 
 				arrivalTime = randomTime(arrivalLow, arrivalHigh) + time;
 
-				drawBank();
+				// drawBank();
 			}
 
-			if (b.serveCusts(time, serviceLow, serviceHigh)) {
-				drawBank();
-			}
-
+			drawBank();
 			time++;
 		}
 
 		while (b.hasCusts()) {
+			for (Teller t : b.tellers) {
+
+				int currentWait = t.getLineWait();
+
+				if (currentWait > 0) {
+					t.setLineWait(currentWait - 1);
+				}
+			}
+
 			if (b.serveCusts(time, serviceLow, serviceHigh)) {
 				drawBank();
 			}
@@ -144,13 +156,13 @@ public class BankSimulation {
 
 
 	public void drawBank() {
-
 		for (Teller t : b.tellers) {
-			System.out.printf("%d   %3d | ", t.getTellerNum(),t.getLineWait());
+			System.out.printf("%d   %3d | ", t.getTellerNum(), t.getLineWait());
 			for (int i = 0; i < t.getNumCusts(); i++) {
 				System.out.print("X ");
 			}
 			System.out.println();
 		}
+		System.out.println();
 	}
 }
