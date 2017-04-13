@@ -12,7 +12,7 @@ public class BankSimulation {
 	private int serviceLow;
 	private int serviceHigh;
 	private int numCustomers = 0;
-	private int totalWaitTime;
+	private int totalWaitTime = 0;
 	private int nextArrival;
 	private int nextOpening;
 	private int nextDeparture;
@@ -75,6 +75,8 @@ public class BankSimulation {
 				ServiceEvent serve = new ServiceEvent(lowestWaitTeller.getTellerNum(),
 						randomTime(serviceLow, serviceHigh), lowestWait + time);
 
+				totalWaitTime += lowestWait;
+				
 				Customer newCust = new Customer(arrive, serve);
 
 				lowestWaitTeller.getQueue().queueCust(newCust);
@@ -86,6 +88,7 @@ public class BankSimulation {
 				numCustomers++;
 
 				arrivalTime = randomTime(arrivalLow, arrivalHigh) + time;
+				numCustomers++;
 
 				// drawBank();
 			}
@@ -141,7 +144,11 @@ public class BankSimulation {
 
 
 	public void displayResults() {
+		
+		double averageWait = totalWaitTime/numCustomers;
 
+		System.out.println("Summary of Results: \n\nNumber of Customers: " + numCustomers
+				+ "\nThe average wait time: " + averageWait);
 	}
 
 
