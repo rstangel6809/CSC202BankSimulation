@@ -67,7 +67,7 @@ public class BankSimulation {
 			
 
 			if (b.serveCusts(time, serviceLow, serviceHigh)) {
-				// drawBank();
+				drawBank();
 			}
 
 			if (arrivalTime <= time) {
@@ -87,10 +87,10 @@ public class BankSimulation {
 
 				arrivalTime = randomTime(arrivalLow, arrivalHigh) + time;
 
-				// drawBank();
+				drawBank();
 			}
 
-			drawBank();
+			//drawBank();
 			time++;
 		}
 
