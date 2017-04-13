@@ -6,8 +6,8 @@ public class Test1 {
 		BankSimulation b = new BankSimulation();
 		b.inputParameters();
 		b.startSimulation();
+		b.displayResults();
 		
-		System.out.println(b.randomTime(1, 6));
 
 	}
 
