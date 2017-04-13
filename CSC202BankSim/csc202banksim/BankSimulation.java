@@ -18,6 +18,7 @@ public class BankSimulation {
 	private int nextDeparture;
 	private int numTellers;
 	private Bank b;
+	private Scanner input = new Scanner(System.in);
 
 
 
@@ -40,7 +41,7 @@ public class BankSimulation {
 
 
 	public void startSimulation() {
-
+		
 		this.b = new Bank(numTellers);
 		int time = 1;
 		int arrivalTime = randomTime(arrivalLow, arrivalHigh) + time;
@@ -120,28 +121,55 @@ public class BankSimulation {
 
 	public void inputParameters() {
 
-		Scanner scan = new Scanner(System.in);
-
-		System.out.println("What is the length of the simultaion in minutes?");
-		simulationLength = scan.nextInt();
+		System.out.println("What is the length of the simultaion in minutes? (60 - 720 minutes)");
+		simulationLength = getChoice1(60,720);
 
 		System.out.println("How many available tellers?");
-		numTellers = scan.nextInt();
+		numTellers = getChoice("[1-9][0-9]*");
 
 		System.out.println("What is the shortest time between customer arrivals?");
-		arrivalLow = scan.nextInt();
+		arrivalLow = getChoice("[1-9][0-9]*");
 
 		System.out.println("What is the longest time between customer arrivals?");
-		arrivalHigh = scan.nextInt();
+		arrivalHigh = getChoice("[1-9][0-9]*");
 
 		System.out.println("What is the shortest time needed for customer service?");
-		serviceLow = scan.nextInt();
+		serviceLow = getChoice("[1-9][0-9]*");
 
 		System.out.println("What is the longest time needed for customer service?");
-		serviceHigh = scan.nextInt();
+		serviceHigh = getChoice("[1-9][0-9]*");
 	}
 
+	public int getChoice(String regex) {
 
+		Scanner input = new Scanner(System.in);
+
+		String in = "";
+
+		while (!in.matches(regex)) {
+			
+			System.out.println("Please Enter a Choice");
+			in = input.nextLine();
+			
+
+		}
+
+		return Integer.parseInt(in);
+	}
+	
+	public int getChoice1(int low, int high){
+		boolean correct = false;
+		int in=0;
+		while(!correct){
+			in = input.nextInt();
+			if (in > low && in < high){
+				correct = true;
+		}
+			else
+				System.out.println("Please Enter a Choice");
+		}
+		return in;
+	}
 
 	public void displayResults() {
 		
