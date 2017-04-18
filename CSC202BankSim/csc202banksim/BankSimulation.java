@@ -41,7 +41,7 @@ public class BankSimulation {
 
 		bank = new Bank(numTellers);
 		int time = 1;
-		int arrivalTime = randomTime(arrivalLow, arrivalHigh) + time;
+		int arrivalTime = RandomTime.newTime(arrivalLow, arrivalHigh) + time;
 		boolean withinTimeLimit = true;
 
 		while (withinTimeLimit || bank.hasCusts()) {
@@ -57,14 +57,14 @@ public class BankSimulation {
 				if (arrivalTime <= time) {
 					queueCust(lowestWait, time, lowestWaitTeller);
 
-					arrivalTime = randomTime(arrivalLow, arrivalHigh) + time;
+					arrivalTime = RandomTime.newTime(arrivalLow, arrivalHigh) + time;
 
 					drawBank();
 				}
 			}
 			else {
 				withinTimeLimit = false;
-				
+
 				for (Teller t : bank.tellers) {
 
 					int currentWait = t.getLineWait();
@@ -82,6 +82,8 @@ public class BankSimulation {
 			time++;
 		}
 
+		bank.calcPercentBusy(simulationLength);
+		reset();
 	}
 
 
@@ -106,6 +108,15 @@ public class BankSimulation {
 		System.out.println("What is the longest time needed for customer service?");
 		serviceHigh = getChoice();
 	}
+	
+	
+	public void reset(){
+		Teller tZero = new Teller();
+		Customer cZero = new Customer();
+		
+		tZero.reset();
+		cZero.reset();
+	}
 
 
 
@@ -114,12 +125,17 @@ public class BankSimulation {
 		boolean correct = false;
 		int in = 0;
 		while (!correct) {
-			in = input.nextInt();
+			if (input.hasNextInt()) {
+				in = input.nextInt();
+			}
 			if (in > 0) {
 				correct = true;
 			}
-			else
+			else{
 				System.out.println("Please enter an integer greater than 0");
+			}
+			
+			input.nextLine();
 		}
 		return in;
 	}
@@ -131,12 +147,18 @@ public class BankSimulation {
 		boolean correct = false;
 		int in = 0;
 		while (!correct) {
-			in = input.nextInt();
+			if (input.hasNextInt()) {
+				in = input.nextInt();
+			}
+			
 			if (in >= low && in <= high) {
 				correct = true;
 			}
-			else
+			else{
 				System.out.println("Please enter a choice between 60 and 720 minutes");
+			}
+			
+			input.nextLine();
 		}
 		return in;
 	}
@@ -146,7 +168,7 @@ public class BankSimulation {
 	public void queueCust(int lowestWait, int time, Teller lowestWaitTeller) {
 
 		ArrivalEvent arrive = new ArrivalEvent(lowestWait, time);
-		ServiceEvent serve = new ServiceEvent(lowestWaitTeller.getTellerNum(), randomTime(serviceLow, serviceHigh),
+		ServiceEvent serve = new ServiceEvent(lowestWaitTeller.getTellerNum(), RandomTime.newTime(serviceLow, serviceHigh),
 				lowestWait + time);
 
 		totalWaitTime += lowestWait;
@@ -192,18 +214,15 @@ public class BankSimulation {
 
 		double averageWait = totalWaitTime / numCustomers;
 
-		System.out.println("Summary of Results: \n\nNumber of Customers: " + numCustomers + 
-				"\nThe average wait time: " + averageWait);
+		System.out.println("Summary of Results: \n\nNumber of Customers: " + numCustomers + "\nThe average wait time: "
+				+ averageWait);
+
+		for (Teller t : bank.tellers) {
+			System.out.printf("Teller %2d had a busy percentage of : %4.1f \n", t.getTellerNum(),
+					t.getBusyPercentage());
+		}
 	}
 
-
-
-	public int randomTime(int low, int high) {
-
-		int diff = high - low + 1;
-		int num = ((int) (Math.random() * diff)) + low;
-		return num;
-	}
 
 
 
@@ -211,11 +230,11 @@ public class BankSimulation {
 
 		for (Teller t : bank.tellers) {
 			System.out.printf("%d   %3d | ", t.getTellerNum(), t.getLineWait());
-			
+
 			for (int i = 0; i < t.getNumCusts(); i++) {
 				System.out.print("X ");
 			}
-			
+
 			System.out.println();
 		}
 		System.out.println();

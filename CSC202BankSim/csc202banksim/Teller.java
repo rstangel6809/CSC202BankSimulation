@@ -3,10 +3,12 @@ package csc202banksim;
 public class Teller {
 
 	private LinkedQueue tQueue;
-	private static int countNum = 1;
+	private static int numCount = 1;
 	private int tellerNum;
 	private int lineWait;
 	private int numCusts;
+	private double sumOfServiceTimes;
+	private double busyPercentage;
 
 
 
@@ -15,6 +17,12 @@ public class Teller {
 		setTellerNum();
 		lineWait = 0;
 		numCusts = 0;
+		sumOfServiceTimes = 0;
+		busyPercentage = 0;
+	}
+	
+	public void reset(){
+		numCount = 1;
 	}
 
 
@@ -32,7 +40,9 @@ public class Teller {
 			if (currentTime - eventTime >= serveTime) {
 				DepartureEvent depart = new DepartureEvent(tellerNum, currentTime);
 				firstCust.setDepartureEvent(depart);
-
+				
+				sumOfServiceTimes += serveTime;
+				
 				System.out.println(firstCust.toStringDeparture());
 
 				tQueue.dequeueCust();
@@ -46,6 +56,10 @@ public class Teller {
 			}
 		}
 		return numCustChanged;
+	}
+	
+	public void calcBusyPercentage(double totalSimulationTime){
+		busyPercentage = (sumOfServiceTimes /  totalSimulationTime)*100;
 	}
 
 
@@ -66,8 +80,8 @@ public class Teller {
 
 	private void setTellerNum() {
 
-		tellerNum = countNum;
-		countNum++;
+		tellerNum = numCount;
+		numCount++;
 	}
 
 
@@ -124,5 +138,21 @@ public class Teller {
 	public int getLineWait() {
 
 		return this.lineWait;
+	}
+	
+	public void setSumOfServiceTimes(double sTime){
+		this.sumOfServiceTimes = sTime;
+	}
+	
+	public double getSumOfServiceTimes(){
+		return sumOfServiceTimes;
+	}
+	
+	public void setBusyPercentage(double percentage){
+		this.busyPercentage = percentage;
+	}
+	
+	public double getBusyPercentage(){
+		return busyPercentage;
 	}
 }

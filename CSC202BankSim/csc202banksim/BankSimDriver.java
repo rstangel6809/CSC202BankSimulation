@@ -77,7 +77,7 @@ public class BankSimDriver {
 		String in = "";
 
 		while (!in.matches("[1-4]")) {
-			System.out.println("Please Enter a Choice");
+			System.out.println("Please enter a choice 1 to 4");
 			in = input.nextLine();
 
 		}

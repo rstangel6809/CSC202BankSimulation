@@ -41,9 +41,9 @@ public class Bank {
 		tellers[0].getQueue().queueCust(c);
 	}
 	
-	public void calcLineWaits(){
+	public void calcPercentBusy(int totalSimulationTime){
 		for(Teller t : tellers){
-			// need to calculate the average of each teller?
+			t.calcBusyPercentage(totalSimulationTime);
 		}
 	}
 
@@ -63,17 +63,6 @@ public class Bank {
 		}
 		
 		return numCustChanged;
-	}
-
-
-
-	public int randomTime(int low, int high) {
-
-		int diff = high - low + 1;
-
-		int num = ((int) (Math.random() * diff)) + low;
-
-		return num;
 	}
 
 }

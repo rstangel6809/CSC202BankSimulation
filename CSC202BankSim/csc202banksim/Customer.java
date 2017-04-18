@@ -28,6 +28,10 @@ public class Customer {
 		arrivalEvent = a;
 		serviceEvent = s;
 	}
+	
+	public void reset(){
+		numCount = 1;
+	}
 
 	private void setCustNum(){
 		custNum = numCount;
