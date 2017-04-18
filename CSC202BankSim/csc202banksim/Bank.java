@@ -43,7 +43,7 @@ public class Bank {
 	
 	public void calcLineWaits(){
 		for(Teller t : tellers){
-			
+			// need to calculate the average of each teller?
 		}
 	}
 
@@ -51,6 +51,7 @@ public class Bank {
 
 	public boolean serveCusts(int time, int low, int high) {
 		boolean numCustChanged = false;
+		
 		for (Teller t : tellers) {
 
 			if (t.hasCust()) {
@@ -60,6 +61,7 @@ public class Bank {
 				}
 			}
 		}
+		
 		return numCustChanged;
 	}
 

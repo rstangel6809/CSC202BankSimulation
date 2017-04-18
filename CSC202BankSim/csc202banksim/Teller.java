@@ -38,6 +38,11 @@ public class Teller {
 				tQueue.dequeueCust();
 				numCustChanged = true;
 				numCusts--;
+
+				if (hasCust()) {
+					Customer nextInLine = tQueue.getFirstCust();
+					System.out.println(nextInLine.toStringService());
+				}
 			}
 		}
 		return numCustChanged;

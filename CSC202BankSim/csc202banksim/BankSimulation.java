@@ -13,11 +13,8 @@ public class BankSimulation {
 	private int serviceHigh;
 	private int numCustomers = 0;
 	private int totalWaitTime = 0;
-	private int nextArrival;
-	private int nextOpening;
-	private int nextDeparture;
 	private int numTellers;
-	private Bank b;
+	private Bank bank;
 	private Scanner input = new Scanner(System.in);
 
 
@@ -41,78 +38,48 @@ public class BankSimulation {
 
 
 	public void startSimulation() {
-		
-		this.b = new Bank(numTellers);
+
+		bank = new Bank(numTellers);
 		int time = 1;
 		int arrivalTime = randomTime(arrivalLow, arrivalHigh) + time;
-		int lowestWait;
+		boolean withinTimeLimit = true;
 
-		while (time <= simulationLength) {
+		while (withinTimeLimit || bank.hasCusts()) {
 
-			lowestWait = b.tellers[0].getLineWait();
-			Teller lowestWaitTeller = b.tellers[0];
+			if (time <= simulationLength) {
+				Teller lowestWaitTeller = findLowestWaitTeller();
+				int lowestWait = lowestWaitTeller.getLineWait();
 
-			for (Teller t : b.tellers) {
-
-				int currentWait = t.getLineWait();
-
-				if (currentWait < lowestWait) {
-					lowestWait = currentWait;
-					lowestWaitTeller = t;
+				if (bank.serveCusts(time, serviceLow, serviceHigh)) {
+					drawBank();
 				}
 
-				if (currentWait > 0) {
-					t.setLineWait(currentWait - 1);
+				if (arrivalTime <= time) {
+					queueCust(lowestWait, time, lowestWaitTeller);
+
+					arrivalTime = randomTime(arrivalLow, arrivalHigh) + time;
+
+					drawBank();
 				}
 			}
-			
-
-			if (b.serveCusts(time, serviceLow, serviceHigh)) {
-				drawBank();
-			}
-
-			if (arrivalTime <= time) {
-				ArrivalEvent arrive = new ArrivalEvent(lowestWait, time);
-				ServiceEvent serve = new ServiceEvent(lowestWaitTeller.getTellerNum(),
-						randomTime(serviceLow, serviceHigh), lowestWait + time);
-
-				totalWaitTime += lowestWait;
+			else {
+				withinTimeLimit = false;
 				
-				Customer newCust = new Customer(arrive, serve);
+				for (Teller t : bank.tellers) {
 
-				lowestWaitTeller.getQueue().queueCust(newCust);
-				lowestWaitTeller.setLineWait(lowestWait + serve.getServiceTime());
+					int currentWait = t.getLineWait();
 
-				System.out.println(newCust.toStringArrival());
+					if (currentWait > 0) {
+						t.setLineWait(currentWait - 1);
+					}
+				}
 
-				lowestWaitTeller.setNumCusts(lowestWaitTeller.getNumCusts() + 1);
-				numCustomers++;
-
-				arrivalTime = randomTime(arrivalLow, arrivalHigh) + time;
-				numCustomers++;
-
-				drawBank();
-			}
-
-			//drawBank();
-			time++;
-		}
-
-		while (b.hasCusts()) {
-			for (Teller t : b.tellers) {
-
-				int currentWait = t.getLineWait();
-
-				if (currentWait > 0) {
-					t.setLineWait(currentWait - 1);
+				if (bank.serveCusts(time, serviceLow, serviceHigh)) {
+					drawBank();
 				}
 			}
 
-			if (b.serveCusts(time, serviceLow, serviceHigh)) {
-				drawBank();
-			}
 			time++;
-
 		}
 
 	}
@@ -122,61 +89,111 @@ public class BankSimulation {
 	public void inputParameters() {
 
 		System.out.println("What is the length of the simultaion in minutes? (60 - 720 minutes)");
-		simulationLength = getChoice1(60,720);
+		simulationLength = getChoice(60, 720);
 
 		System.out.println("How many available tellers?");
-		numTellers = getChoice("[1-9][0-9]*");
+		numTellers = getChoice();
 
 		System.out.println("What is the shortest time between customer arrivals?");
-		arrivalLow = getChoice("[1-9][0-9]*");
+		arrivalLow = getChoice();
 
 		System.out.println("What is the longest time between customer arrivals?");
-		arrivalHigh = getChoice("[1-9][0-9]*");
+		arrivalHigh = getChoice();
 
 		System.out.println("What is the shortest time needed for customer service?");
-		serviceLow = getChoice("[1-9][0-9]*");
+		serviceLow = getChoice();
 
 		System.out.println("What is the longest time needed for customer service?");
-		serviceHigh = getChoice("[1-9][0-9]*");
+		serviceHigh = getChoice();
 	}
 
-	public int getChoice(String regex) {
 
-		Scanner input = new Scanner(System.in);
 
-		String in = "";
+	public int getChoice() {
 
-		while (!in.matches(regex)) {
-			
-			System.out.println("Please Enter a Choice");
-			in = input.nextLine();
-			
-
-		}
-
-		return Integer.parseInt(in);
-	}
-	
-	public int getChoice1(int low, int high){
 		boolean correct = false;
-		int in=0;
-		while(!correct){
+		int in = 0;
+		while (!correct) {
 			in = input.nextInt();
-			if (in > low && in < high){
+			if (in > 0) {
 				correct = true;
-		}
+			}
 			else
-				System.out.println("Please Enter a Choice");
+				System.out.println("Please enter an integer greater than 0");
 		}
 		return in;
 	}
 
-	public void displayResults() {
-		
-		double averageWait = totalWaitTime/numCustomers;
 
-		System.out.println("Summary of Results: \n\nNumber of Customers: " + numCustomers
-				+ "\nThe average wait time: " + averageWait);
+
+	public int getChoice(int low, int high) {
+
+		boolean correct = false;
+		int in = 0;
+		while (!correct) {
+			in = input.nextInt();
+			if (in >= low && in <= high) {
+				correct = true;
+			}
+			else
+				System.out.println("Please enter a choice between 60 and 720 minutes");
+		}
+		return in;
+	}
+
+
+
+	public void queueCust(int lowestWait, int time, Teller lowestWaitTeller) {
+
+		ArrivalEvent arrive = new ArrivalEvent(lowestWait, time);
+		ServiceEvent serve = new ServiceEvent(lowestWaitTeller.getTellerNum(), randomTime(serviceLow, serviceHigh),
+				lowestWait + time);
+
+		totalWaitTime += lowestWait;
+
+		Customer newCust = new Customer(arrive, serve);
+
+		lowestWaitTeller.getQueue().queueCust(newCust);
+		lowestWaitTeller.setLineWait(lowestWait + serve.getServiceTime());
+
+		System.out.println(newCust.toStringArrival());
+
+		lowestWaitTeller.setNumCusts(lowestWaitTeller.getNumCusts() + 1);
+
+		numCustomers++;
+	}
+
+
+
+	public Teller findLowestWaitTeller() {
+
+		Teller lowestWaitTeller = bank.tellers[0];
+		int lowestWait = lowestWaitTeller.getLineWait();
+
+		for (Teller t : bank.tellers) {
+
+			int currentWait = t.getLineWait();
+
+			if (currentWait < lowestWait) {
+				lowestWait = currentWait;
+				lowestWaitTeller = t;
+			}
+
+			if (currentWait > 0) {
+				t.setLineWait(currentWait - 1);
+			}
+		}
+		return lowestWaitTeller;
+	}
+
+
+
+	public void displayResults() {
+
+		double averageWait = totalWaitTime / numCustomers;
+
+		System.out.println("Summary of Results: \n\nNumber of Customers: " + numCustomers + 
+				"\nThe average wait time: " + averageWait);
 	}
 
 
@@ -191,11 +208,14 @@ public class BankSimulation {
 
 
 	public void drawBank() {
-		for (Teller t : b.tellers) {
+
+		for (Teller t : bank.tellers) {
 			System.out.printf("%d   %3d | ", t.getTellerNum(), t.getLineWait());
+			
 			for (int i = 0; i < t.getNumCusts(); i++) {
 				System.out.print("X ");
 			}
+			
 			System.out.println();
 		}
 		System.out.println();
