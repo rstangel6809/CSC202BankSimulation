@@ -1,4 +1,4 @@
-package csc202banksim;
+package csc202RutiglianoLaffoonStangelBankSim;
 
 import java.util.Scanner;
 
