@@ -86,11 +86,12 @@ public class Bank {
 
 		Teller t = tellers[tellerIndex];
 
-		if (!t.hasCust()) {
+		if (!t.hasCust() && t.isActive()) {
 			tellers[tellerIndex].setActive(false);
+			return true;
 		}
 
-		return !t.hasCust();
+		return false;
 	}
 
 }

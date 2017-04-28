@@ -68,7 +68,6 @@ public class BankSimulation {
 					drawBank();
 				}
 
-				checkTellerAvailibility(lowestWait);
 			}
 			else {
 				withinTimeLimit = false;
@@ -86,7 +85,7 @@ public class BankSimulation {
 					drawBank();
 				}
 			}
-
+			deactivateTellers();
 			time++;
 		}
 
@@ -105,7 +104,7 @@ public class BankSimulation {
 		numTellers = getChoice();
 
 		System.out.println("How many active tellers?");
-		numMinimumTellers = getChoice();
+		numMinimumTellers = getChoice(1, numTellers);
 		numActiveTellers = numMinimumTellers;
 
 		System.out.println("What is the shortest time between customer arrivals?");
@@ -169,7 +168,7 @@ public class BankSimulation {
 				correct = true;
 			}
 			else {
-				System.out.println("Please enter a choice between 60 and 720 minutes");
+				System.out.printf("Please enter a choice between %d and %d\n", low, high);
 			}
 
 			input.nextLine();
@@ -220,6 +219,9 @@ public class BankSimulation {
 				}
 			}
 		}
+		if (activateTellers(lowestWait)) {
+			lowestWaitTeller = findLowestWaitTeller();
+		}
 		return lowestWaitTeller;
 	}
 
@@ -233,8 +235,10 @@ public class BankSimulation {
 				+ averageWait);
 
 		for (Teller t : bank.tellers) {
-			System.out.printf("Teller %2d had a busy percentage of : %4.1f \n", t.getTellerNum(),
-					t.getBusyPercentage());
+			if (t.getBusyPercentage() > 0) {
+				System.out.printf("Teller %2d had a busy percentage of : %4.1f \n", t.getTellerNum(),
+						t.getBusyPercentage());
+			}
 		}
 	}
 
@@ -242,9 +246,10 @@ public class BankSimulation {
 
 	public void drawBank() {
 
+		System.out.println("\nTeller #     Current Wait  |  Customers Queued");
 		for (Teller t : bank.tellers) {
 			if (t.isActive()) {
-				System.out.printf("%d   %3d | ", t.getTellerNum(), t.getLineWait());
+				System.out.printf("   %d\t\t %3d\t   | ", t.getTellerNum(), t.getLineWait());
 
 				for (int i = 0; i < t.getNumCusts(); i++) {
 					System.out.print("X ");
@@ -258,27 +263,21 @@ public class BankSimulation {
 
 
 
-	public void checkTellerAvailibility(int lowestWait) {
+	public boolean activateTellers(int lowestWait) {
 
 		if (lowestWait > custWaitThreshold && numActiveTellers < numTellers) {
-			activateTellers();
+			bank.activateTeller(numActiveTellers);
+			numActiveTellers++;
+
+			System.out.printf("Customer wait times exceeded the %d minute threshold and a teller was activated.\n",
+					custWaitThreshold);
+
+			drawBank();
+			return true;
 		}
-		else if (numActiveTellers > numMinimumTellers) {
-			deactivateTellers();
+		else {
+			return false;
 		}
-	}
-
-
-
-	public void activateTellers() {
-
-		bank.activateTeller(numActiveTellers);
-		numActiveTellers++;
-
-		System.out.printf("Customer wait times exceeded the %d minute threshold and a teller was activated.\n",
-				custWaitThreshold);
-
-		drawBank();
 
 	}
 
@@ -286,14 +285,24 @@ public class BankSimulation {
 
 	public void deactivateTellers() {
 
-		if (bank.deactivateTeller(numActiveTellers-1)) {
-			numActiveTellers--;
+		if (numActiveTellers > numMinimumTellers) {
+			boolean deactivated = false;
 
-			System.out.printf(
-					"Customer wait times have subsided the %d minute threshold and a teller was deactivated.\n",
-					custWaitThreshold);
+			for (int i = numMinimumTellers; i < numTellers; i++) {
 
-			drawBank();
+				if (bank.deactivateTeller(i)) {
+					deactivated = true;
+					numActiveTellers--;
+
+				}
+			}
+			if (deactivated) {
+				System.out.printf(
+						"Customer wait times have subsided the %d minute threshold and teller(s) were deactivated.\n",
+						custWaitThreshold);
+
+				drawBank();
+			}
 		}
 
 	}
