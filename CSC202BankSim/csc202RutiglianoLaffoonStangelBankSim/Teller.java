@@ -1,4 +1,4 @@
-package csc202banksim;
+package csc202RutiglianoLaffoonStangelBankSim;
 
 public class Teller {
 
@@ -9,7 +9,7 @@ public class Teller {
 	private int numCusts;
 	private double sumOfServiceTimes;
 	private double busyPercentage;
-
+	private boolean active;
 
 
 	public Teller() {
@@ -19,6 +19,7 @@ public class Teller {
 		numCusts = 0;
 		sumOfServiceTimes = 0;
 		busyPercentage = 0;
+		active = false;
 	}
 	
 	public void reset(){
@@ -60,6 +61,14 @@ public class Teller {
 	
 	public void calcBusyPercentage(double totalSimulationTime){
 		busyPercentage = (sumOfServiceTimes /  totalSimulationTime)*100;
+	}
+	
+	public boolean isActive(){
+		return active;
+	}
+	
+	public void setActive(boolean a){
+		this.active = a;
 	}
 
 
